@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+# activar rewrite
+RewriteEngine on
+
+# error 404
+ErrorDocument 404 http://localhost/TiendaCamisetas/error/
+
+# denegar acceso a directorios
+RewriteCond %{SCRIPT_FILENAME} !-d
+
+# denegar acceso a ficheros
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+# solo es posible acceder a los directorios o ficheros con la siguiente regla:
+# nuevas reglas de reescritura
+RewriteRule ^(.*)/(.*) index.php?controlador=$1&accion=$2
+</IfModule>
