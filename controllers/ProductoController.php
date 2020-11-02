@@ -9,7 +9,7 @@ class productoController extends Controller
 
     public function __construct()
     {
-        $this->productoHandler = $this->load_model('handlers/ProductoHandler');
+        $this->productoHandler = new ProductoHandler();
     }
 
     public function index()

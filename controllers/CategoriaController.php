@@ -25,6 +25,7 @@ class categoriaController extends Controller
         }
     }
 
+    // este metodo muestra los productos segun la categoria seleccionada
     public function ver()
     {
         if (isset($_GET['id'])) {
@@ -58,6 +59,51 @@ class categoriaController extends Controller
         if (isset($_POST['crear'])) {
             $this->categoriaHandler->setNombre($_POST['nombre']);
             $this->categoriaHandler->save();
+        }
+        header('Location: ' . DOMINIO_URL . 'categoria/index');
+    }
+
+    public function editar_view(): void
+    {
+        Utils::isAdmin();
+        if (isset($_GET['id'])) {
+            $this->categoriaHandler->setId($_GET['id']);
+            $categoria = $this->categoriaHandler->getOne();
+            if (is_null($categoria)) {
+                goto salir;
+            }
+            require_once 'views/categoria/editar.php';
+        } else {
+            salir:
+            header('Location: ' . DOMINIO_URL . 'categoria/index');
+        }
+    }
+
+    public function editar(): void
+    {
+        Utils::isAdmin();
+        if (isset($_POST['nombre']) && isset($_POST['id'])) {
+            $this->categoriaHandler->setId($_POST['id']);
+            $this->categoriaHandler->setNombre($_POST['nombre']);
+            if ($this->categoriaHandler->edit()) {
+                $_SESSION['edit-categoria'] = 'complete';
+            } else {
+                $_SESSION['edit-categoria'] = 'failed';
+            }
+        }
+        header('Location: ' . DOMINIO_URL . 'categoria/index');
+    }
+
+    public function borrar(): void
+    {
+        Utils::isAdmin();
+        if (isset($_GET['id'])) {
+            $this->categoriaHandler->setId($_GET['id']);
+            if ($this->categoriaHandler->delete()) {
+                $_SESSION['delete-categoria'] = 'complete';
+            } else {
+                $_SESSION['delete-categoria'] = 'failed';
+            }
         }
         header('Location: ' . DOMINIO_URL . 'categoria/index');
     }
