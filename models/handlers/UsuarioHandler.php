@@ -2,65 +2,120 @@
 
 require_once 'models/handlers/Handler.php';
 
-class UsuarioHandler extends Handler {
-    
+class UsuarioHandler extends Handler
+{
+
     private $id;
-    
-    public function __construct() {
+    private $nombre;
+    private $apellidos;
+    private $email;
+    private $password;
+    private $rol;
+    private $imagen;
+
+    public function __construct()
+    {
         parent::__construct();
     }
-    
+
     // ------------------------------------------------------------------------
-    
-    public function login($user) {
-        $resultado = false;
-        $sql = "SELECT * FROM usuarios WHERE email = '{$user->getEmail()}'";
+
+    public function login(): ?object
+    {
+        $result = false;
+        $sql = "SELECT * FROM usuarios WHERE email = '{$this->email}'";
         $login = $this->db->query($sql);
         if ($login && $login->num_rows == 1) {
-            $usuarioDB = $login->fetch_object();
-            $verificacion = password_verify($user->getPassword(), $usuarioDB->password);
-            if ($verificacion) {
-                $resultado = $usuarioDB;
-            } else {
-                $resultado = false;
+            $usuario = $login->fetch_object();
+            if (password_verify($this->password, $usuario->password)) {
+                $result = $usuario;
             }
-        } else {
-            $resultado = false;
         }
-        return $resultado;
+        return $result;
     }
-    
-    public function save($usuario) {
-        $resultado = false;
-        $pass = password_hash($usuario->getPassword(), PASSWORD_BCRYPT, ['cost' => 4]);
-        $sql = "
-            INSERT INTO usuarios VALUES(
-                NULL,
-                '{$usuario->getNombre()}',
-                '{$usuario->getApellidos()}',
-                '{$usuario->getEmail()}',
-                '{$pass}',
-                'user',
-                NULL
-            );
-        ";
+
+    public function add(): bool
+    {
+        $result = false;
+        $sql = "INSERT INTO usuarios VALUES(NULL, '{$this->nombre}', "
+                . "'{$this->apellidos}', '{$this->email}', "
+                . "'{$this->password}', 'user', NULL);";
         if ($this->db->query($sql)) {
-            $resultado = true;
+            $result = true;
         }
-        return $resultado;
+        return $result;
     }
-    
+
     // ------------------------------------------------------------------------
-    
+
     function getId()
     {
         return $this->id;
     }
 
-    function setId($id): void
+    function getNombre()
     {
-        $this->id = $id;
+        return $this->nombre;
+    }
+
+    function getApellidos()
+    {
+        return $this->apellidos;
+    }
+
+    function getEmail()
+    {
+        return $this->email;
+    }
+
+    function getPassword()
+    {
+        return $this->password;
+    }
+
+    function getRol()
+    {
+        return $this->rol;
+    }
+
+    function getImagen()
+    {
+        return $this->imagen;
+    }
+
+    function setNombre($nombre)
+    {
+        $this->nombre = trim(mb_strtolower(mb_convert_encoding($nombre, $this->encode)), $this->encode);
+    }
+
+    function setApellidos($apellidos)
+    {
+        $this->apellidos = trim(mb_strtolower(mb_convert_encoding($apellidos, $this->encode)), $this->encode);
+    }
+
+    function setEmail($email)
+    {
+        $this->email = trim(mb_convert_encoding($email, $this->encode));
+    }
+
+    function setPassword($password)
+    {
+        $this->password = password_hash(trim($password), PASSWORD_BCRYPT, ['cost' => 4]);
+    }
+    
+    function setPasswordNoEncrypt($password)
+    {
+        $this->password = trim($password);
+    }
+
+    function setRol($rol)
+    {
+        $this->rol = $rol;
+    }
+
+    function setImagen($imagen)
+    {
+        $this->imagen = $imagen;
     }
 
 }
-

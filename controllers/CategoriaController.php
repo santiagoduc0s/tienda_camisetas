@@ -9,6 +9,7 @@ class categoriaController extends Controller
 
     public function __construct()
     {
+        require_once 'models/handlers/CategoriaHandler.php';
         $this->categoriaHandler = new CategoriaHandler();
     }
 
@@ -32,6 +33,7 @@ class categoriaController extends Controller
             $this->categoriaHandler->setId($_GET['id']);
             $categoria = $this->categoriaHandler->getOne();
             if ($categoria != null) {
+                require_once 'models/handlers/ProductoHandler.php';
                 $productoHandler = new ProductoHandler();
                 $productoHandler->setCategoria_id($_GET['id']);
                 $productos = $productoHandler->getAllByCategory();

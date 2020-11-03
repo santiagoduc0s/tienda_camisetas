@@ -2,15 +2,19 @@
 
 require_once './controllers/Controller.php';
 
-class carritoController extends Controller {
+class carritoController extends Controller
+{
 
     private $carritoHandler;
 
-    public function __construct() {
-        $this->carritoHandler = $this->load_model('handlers/CarritoHandler');
+    public function __construct()
+    {
+        require_once 'models/handlers/CarritoHandler.php';
+        $this->carritoHandler = new CarritoHandler();
     }
 
-    public function index(): void {
+    public function index(): void
+    {
         Utils::isUserLogged();
         if (!isset($_SESSION['carrito'])) {
             $_SESSION['carrito'] = null;
@@ -19,7 +23,8 @@ class carritoController extends Controller {
         require_once './views/carrito/index.php';
     }
 
-    public function add(): void {
+    public function add(): void
+    {
         Utils::isUserLogged();
         if (isset($_GET['id'])) {
             $producto_id = $_GET['id'];
@@ -28,7 +33,7 @@ class carritoController extends Controller {
             if (isset($_SESSION['carrito'])) {
                 foreach ($_SESSION['carrito'] as $indice => $elemento) {
                     if ($elemento['id_producto'] == $producto_id) {
-                        $_SESSION['carrito'][$indice]['unidades'] ++;
+                        $_SESSION['carrito'][$indice]['unidades']++;
                         $productoRepetido = true;
                     }
                 }
@@ -52,7 +57,8 @@ class carritoController extends Controller {
         }
     }
 
-    public function delete(): void {
+    public function delete(): void
+    {
         Utils::isUserLogged();
         if (isset($_GET['indice'])) {
             unset($_SESSION['carrito'][$_GET['indice']]);
@@ -60,7 +66,8 @@ class carritoController extends Controller {
         header('Location:' . DOMINIO_URL . 'carrito/index');
     }
 
-    public function delete_all(): void {
+    public function delete_all(): void
+    {
         Utils::isUserLogged();
         unset($_SESSION['carrito']);
         header('Location:' . DOMINIO_URL . 'carrito/index');
@@ -73,7 +80,7 @@ class carritoController extends Controller {
         }
         header('Location:' . DOMINIO_URL . 'carrito/index');
     }
-    
+
     public function lessUnidades(): void
     {
         if (isset($_GET['indice'])) {
@@ -84,4 +91,5 @@ class carritoController extends Controller {
         }
         header('Location:' . DOMINIO_URL . 'carrito/index');
     }
+
 }

@@ -9,8 +9,11 @@ class productoController extends Controller
 
     public function __construct()
     {
+        require_once 'models/handlers/ProductoHandler.php';
         $this->productoHandler = new ProductoHandler();
     }
+    
+    // ------------------------------------------------------------------------
 
     public function index()
     {

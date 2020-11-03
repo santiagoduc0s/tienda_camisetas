@@ -1,11 +1,11 @@
 <h1>Registrarse</h1>
 
 <?php if (isset($_SESSION['registro']) && $_SESSION['registro'] == 'complete'): ?> 
-    <strong class="alert_green">¡Registro satifactorio!</strong>
+    <p class="alert_green">¡Registro satifactorio!</p>
 <?php elseif (isset($_SESSION['registro']) && $_SESSION['registro'] == 'problem'): ?>
-    <strong class="alert_red">Lamentablemente no su pudo completar el registro</strong>
+    <p class="alert_red">Lamentablemente no su pudo completar el registro</p>
 <?php elseif (isset($_SESSION['registro']) && $_SESSION['registro'] == 'error'): ?>
-    <strong class="alert_red">Ocurrió un problema, intente registrarse nuevamente</strong>
+    <p class="alert_red">Ocurrió un problema, intente registrarse nuevamente</p>
 <?php endif; ?>
 <?php Utils::delete_session('registro'); ?>
 
@@ -22,5 +22,5 @@
     <label for="password">Password</label>
     <input type="password" name="password" required />
     
-    <input type="submit" name="registro" value="Registrar" />
+    <button type="submit" value="registro">Registrar</button>
 </form>

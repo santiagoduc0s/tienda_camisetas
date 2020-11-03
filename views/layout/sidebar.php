@@ -15,19 +15,21 @@
     <?php endif; ?>
 
     <div id="login" class="block_aside">
-
         <?php if (!isset($_SESSION['user_logged'])): ?>
             <h3>Entrar a la WEB</h3>
-            <?php if (isset($_SESSION['error_login']) && $_SESSION['error_login'] == 'fail'): ?>
-                <strong class="alert_red">Los datos ingresados son incorectos</strong>
-                <?php Utils::delete_session('error_login'); ?>
+            <?php if (isset($_SESSION['login'])): ?>
+                <?php if ($_SESSION['login'] == 'failed'): ?>
+                    <p class="alert_red">Usuario o contraseña incorrecto.</p>
+                <?php endif; ?>
+                <?php Utils::delete_session('login'); ?>
             <?php endif; ?>
+
             <form action="<?= DOMINIO_URL; ?>usuario/login" method="POST">
                 <label for="email">Email</label>
                 <input type="email" name="email" required />
                 <label for="password">Contraseña</label>
                 <input type="password" name="password" required />
-                <input type="submit" name="login" value="Ingresar" />
+                <button type="submit" name="login">Ingresar</button>
             </form>
         <?php else: ?>
             <h3><?= ucwords($_SESSION['user_logged']->nombre) ?> <?= ucwords($_SESSION['user_logged']->apellidos) ?></h3>
@@ -46,7 +48,7 @@
                 <?php endif; ?>
                 <li><a href="usuario/logout">Cerrar sesión</a></li>
             <?php else: ?>
-                <li><a href="usuario/register">Registrate aquí</a></li>
+                <li><a href="usuario/agregar_view">Registrate aquí</a></li>
             <?php endif; ?>
         </ul>
 

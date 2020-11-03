@@ -2,62 +2,80 @@
 
 require_once './controllers/Controller.php';
 
-class usuarioController extends Controller {
-    
-    private $usuarioEntity;
+class usuarioController extends Controller
+{
+
     private $usuarioHandler;
 
-    public function __construct() {
-        $this->usuarioEntity = $this->load_model('entities/Usuario');
-        $this->usuarioHandler = $this->load_model('handlers/UsuarioHandler');
+    public function __construct()
+    {
+        require_once 'models/handlers/UsuarioHandler.php';
+        $this->usuarioHandler = new UsuarioHandler();
     }
 
-
-    public function index() {
-        echo 'Controlador Usuario - index()';
-    }
-    
-    public function login() {
+    public function login()
+    {
         if (isset($_POST['login'])) {
-            $this->usuarioEntity->setEmail($_POST['email']);
-            $this->usuarioEntity->setPassword($_POST['password']);
-            $userLogin = $this->usuarioHandler->login($this->usuarioEntity);
-            if ($userLogin !== false && is_object($userLogin)) {
-                $_SESSION['user_logged'] = $userLogin;
-                if ($userLogin->rol == 'admin') {
-                    $_SESSION['admin'] = true;
+            $email = isset($_POST['email']) ? $_POST['email'] : false;
+            $password = isset($_POST['password']) ? $_POST['password'] : false;
+
+            if ($email && $password) {
+                $this->usuarioHandler->setEmail($email);
+                $this->usuarioHandler->setPasswordNoEncrypt($password);
+
+                $usuario = $this->usuarioHandler->login();
+                if ($usuario) {
+                    $_SESSION['user_logged'] = $userLogin;
+                    if ($userLogin->rol == 'admin') {
+                        $_SESSION['admin'] = true;
+                    }
+                } else {
+                    $_SESSION['login'] = 'failed';
                 }
-            } else {
-                $_SESSION['error_login'] = 'fail';
             }
         }
-        $this->redirection('');
+        header('Location:' .  DOMINIO_URL);
     }
-    
-    public function logout() {
+
+    public function logout()
+    {
         Utils::delete_session('user_logged');
         Utils::delete_session('admin');
         $this->redirection();
     }
-    
-    public function register() {
+
+    public function agregar_view()
+    {
+        if ($_SESSION['user_logged']) {
+            // TODO: redireccionar al perfil del usuario
+            header('Location:' . DOMINIO_URL);
+            exit();
+        }
         require_once './views/usuario/registro.php';
     }
-    
-    public function save() {
+
+    public function agregar()
+    {
         if (isset($_POST['registro'])) {
-            $this->usuarioEntity->setNombre($_POST['nombre']);
-            $this->usuarioEntity->setApellidos($_POST['apellidos']);
-            $this->usuarioEntity->setEmail($_POST['email']);
-            $this->usuarioEntity->setPassword($_POST['password']);
-            if ($this->usuarioHandler->save($this->usuarioEntity)) {
-                $_SESSION['registro'] = 'complete';
-            } else {
-                $_SESSION['registro'] = 'problem';
+            $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : false;
+            $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : false;
+            $email = isset($_POST['email']) ? $_POST['email'] : false;
+            $password = isset($_POST['password']) ? $_POST['password'] : false;
+
+            if ($nombre && $apellido && $email && $password) {
+                $this->usuarioHandler->setNombre($nombre);
+                $this->usuarioHandler->setApellidos($apellido);
+                $this->usuarioHandler->setEmail($email);
+                $this->usuarioHandler->setPassword($password);
+
+                if ($this->usuarioHandler->add()) {
+                    $_SESSION['registro'] = 'complete';
+                } else {
+                    $_SESSION['registro'] = 'failed';
+                }
             }
-        } else {
-            $_SESSION['registro'] = 'error';
         }
         $this->redirection('usuario/register');
     }
+
 }

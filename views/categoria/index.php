@@ -13,7 +13,7 @@
     <?php if ($_SESSION['delete-categoria'] == 'complete'): ?>
         <p class="alert_green">Se ha eliminado la categoría</p><br>
     <?php elseif ($_SESSION['delete-categoria'] == 'failed'): ?>
-        <p class="alert_red">Ocurrió un error, intente de nuevo</p><br>
+        <p class="alert_red">Ocurrió un error o existen productos en esta categoria, intente de nuevo</p><br>
     <?php endif; ?>
     <?php Utils::delete_session('delete-categoria') ?>
 <?php endif; ?>

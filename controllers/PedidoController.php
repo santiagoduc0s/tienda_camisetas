@@ -11,7 +11,7 @@ class pedidoController extends Controller
 
     public function __construct()
     {
-        require_once './models/handlers/PedidoHandler.php';
+        require_once 'models/handlers/PedidoHandler.php';
         $this->pedidoHandler = new PedidoHandler();
     }
 
