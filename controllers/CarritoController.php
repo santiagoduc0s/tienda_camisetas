@@ -6,22 +6,25 @@ class carritoController extends Controller
 {
 
     private $carritoHandler;
+    private $cart;
 
     public function __construct()
     {
+        Utils::isUserLogged();
+        $this->cart = 'carrito-' . $_SESSION['user_logged']->email;
         require_once 'models/handlers/CarritoHandler.php';
         $this->carritoHandler = new CarritoHandler();
     }
-    
+
     // ------------------------------------------------------------------------
 
     public function index(): void
     {
         Utils::isUserLogged();
-        if (!isset($_SESSION['carrito'])) {
-            $_SESSION['carrito'] = null;
+        if (!isset($_SESSION[$this->cart])) {
+            $_SESSION[$this->cart] = null;
         }
-        $carrito = $_SESSION['carrito'];
+        $carrito = $_SESSION[$this->cart];
         require_once './views/carrito/index.php';
     }
 
@@ -32,21 +35,22 @@ class carritoController extends Controller
             $producto_id = $_GET['id'];
             $productoRepetido = false;
 
-            if (isset($_SESSION['carrito'])) {
-                foreach ($_SESSION['carrito'] as $indice => $elemento) {
+            if (isset($_SESSION[$this->cart])) {
+                foreach ($_SESSION[$this->cart] as $indice => $elemento) {
                     if ($elemento['id_producto'] == $producto_id) {
-                        $_SESSION['carrito'][$indice]['unidades']++;
+                        $_SESSION[$this->cart][$indice]['unidades']++;
                         $productoRepetido = true;
                     }
                 }
             }
+
             if (!$productoRepetido) {
                 require_once 'models/handlers/ProductoHandler.php';
                 $producto = new ProductoHandler();
                 $producto->setId($producto_id);
                 $prodSearch = $producto->searchById();
                 if (is_object($prodSearch)) {
-                    $_SESSION['carrito'][] = [
+                    $_SESSION[$this->cart][] = [
                         'id_producto' => $producto_id,
                         'precio' => $prodSearch->precio,
                         'unidades' => 1,
@@ -64,7 +68,7 @@ class carritoController extends Controller
     {
         Utils::isUserLogged();
         if (isset($_GET['indice'])) {
-            unset($_SESSION['carrito'][$_GET['indice']]);
+            unset($_SESSION[$this->cart][$_GET['indice']]);
         }
         header('Location:' . DOMINIO_URL . 'carrito/index');
     }
@@ -72,14 +76,14 @@ class carritoController extends Controller
     public function delete_all(): void
     {
         Utils::isUserLogged();
-        unset($_SESSION['carrito']);
+        unset($_SESSION[$this->cart]);
         header('Location:' . DOMINIO_URL . 'carrito/index');
     }
 
     public function moreUnidades(): void
     {
         if (isset($_GET['indice'])) {
-            $_SESSION['carrito'][$_GET['indice']]['unidades']++;
+            $_SESSION[$this->cart][$_GET['indice']]['unidades']++;
         }
         header('Location:' . DOMINIO_URL . 'carrito/index');
     }
@@ -87,9 +91,11 @@ class carritoController extends Controller
     public function lessUnidades(): void
     {
         if (isset($_GET['indice'])) {
-            $count = --$_SESSION['carrito'][$_GET['indice']]['unidades'];
-            if ($count <= 0) {
-                unset($_SESSION['carrito'][$_GET['indice']]);
+            if (isset($_SESSION[$this->cart][$_GET['indice']]['unidades'])) {
+                $count = --$_SESSION[$this->cart][$_GET['indice']]['unidades'];
+                if ($count <= 0) {
+                    unset($_SESSION[$this->cart][$_GET['indice']]);
+                }
             }
         }
         header('Location:' . DOMINIO_URL . 'carrito/index');

@@ -34,17 +34,20 @@ class Utils {
     }
     
     public static function statusCarrito() {
+        self::isUserLogged();
         $status = [
             'cantidad' => 0,
             'unidades' => 0,
             'total' => 0
         ];
         
-        if (isset($_SESSION['carrito'])) {
-            $status['cantidad'] = count($_SESSION['carrito']);
+        $cart = 'carrito-' . $_SESSION['user_logged']->email;
+        
+        if (isset($_SESSION[$cart])) {
+            $status['cantidad'] = count($_SESSION[$cart]);
             $unidades = 0;
             $total = 0;
-            foreach ($_SESSION['carrito'] as $prod) {
+            foreach ($_SESSION[$cart] as $prod) {
                 $unidades += $prod['unidades'];
                 $total += $prod['precio'] * $prod['unidades'];
             }

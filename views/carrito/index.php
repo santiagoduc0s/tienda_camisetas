@@ -1,5 +1,5 @@
 <h1>Carrito de la compra</h1>
-<?php if (isset($_SESSION['carrito']) && !empty($_SESSION['carrito'])): ?>
+<?php if (isset($_SESSION['carrito-' . $_SESSION['user_logged']->email]) && !empty($_SESSION['carrito-' . $_SESSION['user_logged']->email])): ?>
     <table>
         <thead>
             <tr>
@@ -7,7 +7,6 @@
                 <th>Nombre</th>
                 <th>Precio</th>
                 <th>Unidades</th>
-                <th>Sacar</th>
             </tr>
         </thead>
         <tbody>
