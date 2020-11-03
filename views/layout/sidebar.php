@@ -42,7 +42,7 @@
                 <li><a href="pedido/pedidos">Gestionar pedidos</a></li>
             <?php endif; ?>
 
-            <?php if ($_SESSION['user_logged']): ?>
+            <?php if (isset($_SESSION['user_logged'])): ?>
                 <?php if (!isset($_SESSION['admin'])): ?>
                     <li><a href="pedido/pedidos">Mis pedidos</a></li>
                 <?php endif; ?>

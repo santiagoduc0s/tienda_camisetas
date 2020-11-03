@@ -85,17 +85,17 @@ class UsuarioHandler extends Handler
 
     function setNombre($nombre)
     {
-        $this->nombre = trim(mb_strtolower(mb_convert_encoding($nombre, $this->encode)), $this->encode);
+        $this->nombre = $this->db->real_escape_string(mb_strtolower(trim($nombre), 'UTF-8'));
     }
 
     function setApellidos($apellidos)
     {
-        $this->apellidos = trim(mb_strtolower(mb_convert_encoding($apellidos, $this->encode)), $this->encode);
+        $this->apellidos = $this->db->real_escape_string(mb_strtolower(trim($apellido), 'UTF-8'));
     }
 
     function setEmail($email)
     {
-        $this->email = trim(mb_convert_encoding($email, $this->encode));
+        $this->email = $this->db->real_escape_string(mb_strtolower(trim($email), 'UTF-8'));
     }
 
     function setPassword($password)

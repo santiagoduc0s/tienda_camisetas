@@ -12,8 +12,10 @@ class usuarioController extends Controller
         require_once 'models/handlers/UsuarioHandler.php';
         $this->usuarioHandler = new UsuarioHandler();
     }
+    
+    // ------------------------------------------------------------------------
 
-    public function login()
+    public function login(): void
     {
         if (isset($_POST['login'])) {
             $email = isset($_POST['email']) ? $_POST['email'] : false;
@@ -25,8 +27,8 @@ class usuarioController extends Controller
 
                 $usuario = $this->usuarioHandler->login();
                 if ($usuario) {
-                    $_SESSION['user_logged'] = $userLogin;
-                    if ($userLogin->rol == 'admin') {
+                    $_SESSION['user_logged'] = $usuario;
+                    if ($usuario->rol == 'admin') {
                         $_SESSION['admin'] = true;
                     }
                 } else {
@@ -37,14 +39,14 @@ class usuarioController extends Controller
         header('Location:' .  DOMINIO_URL);
     }
 
-    public function logout()
+    public function logout(): void
     {
         Utils::delete_session('user_logged');
         Utils::delete_session('admin');
-        $this->redirection();
+        header('Location:' . DOMINIO_URL);
     }
 
-    public function agregar_view()
+    public function agregar_view(): void
     {
         if ($_SESSION['user_logged']) {
             // TODO: redireccionar al perfil del usuario
@@ -54,7 +56,7 @@ class usuarioController extends Controller
         require_once './views/usuario/registro.php';
     }
 
-    public function agregar()
+    public function agregar(): void
     {
         if (isset($_POST['registro'])) {
             $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : false;

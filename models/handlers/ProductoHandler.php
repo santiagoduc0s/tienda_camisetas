@@ -28,7 +28,7 @@ class ProductoHandler extends Handler
         $sql = "SELECT p.*, c.nombre AS 'cat_nombre' FROM productos p "
                 . "JOIN categorias c ON p.categoria_id = c.id "
                 . "WHERE p.categoria_id = {$this->categoria_id};";
-        if ($productos = $this->db->query()) {
+        if ($productos = $this->db->query($sql)) {
             $result = $productos;
         }
         return $productos;

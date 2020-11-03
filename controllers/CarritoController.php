@@ -12,6 +12,8 @@ class carritoController extends Controller
         require_once 'models/handlers/CarritoHandler.php';
         $this->carritoHandler = new CarritoHandler();
     }
+    
+    // ------------------------------------------------------------------------
 
     public function index(): void
     {
@@ -39,6 +41,7 @@ class carritoController extends Controller
                 }
             }
             if (!$productoRepetido) {
+                require_once 'models/handlers/ProductoHandler.php';
                 $producto = new ProductoHandler();
                 $producto->setId($producto_id);
                 $prodSearch = $producto->searchById();
