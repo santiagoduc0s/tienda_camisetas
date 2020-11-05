@@ -5,7 +5,12 @@ require_once './controllers/Controller.php';
 class pedidoController extends Controller
 {
 
-    const ESTADO_PEDIDO = ['confirmado', 'listo para enviar', 'cancelado', 'enviado'];
+    const ESTADO_PEDIDO = [
+        'confirmado',
+        'listo para enviar',
+        'cancelado',
+        'enviado'
+    ];
 
     private $pedidoHandler;
 
@@ -15,10 +20,12 @@ class pedidoController extends Controller
         $this->pedidoHandler = new PedidoHandler();
     }
 
-    public function hacer()
+    // -----------------------------------------------------------------------
+
+    public function datos_envio(): void
     {
         Utils::isUserLogged();
-        require_once './views/pedido/hacer.php';
+        require_once './views/pedido/datos-envio.php';
     }
 
     public function confirmado()
@@ -33,7 +40,7 @@ class pedidoController extends Controller
         include_once './views/pedido/confirmado.php';
     }
 
-    public function add()
+    public function add(): void
     {
         Utils::isUserLogged();
 
@@ -49,7 +56,7 @@ class pedidoController extends Controller
             $this->pedidoHandler->setCiudad($ciudad);
             $this->pedidoHandler->setDireccion($direccion);
             $this->pedidoHandler->setCoste($coste);
-            if ($this->pedidoHandler->save()) {
+            if ($this->pedidoHandler->add()) {
                 $_SESSION['pedido'] = 'complete';
                 Utils::delete_session('carrito');
             } else {
@@ -61,21 +68,21 @@ class pedidoController extends Controller
         header('Location:' . DOMINIO_URL . 'pedido/confirmado');
     }
 
-    public function pedidos()
+    public function mis_pedidos(): void
     {
         Utils::isUserLogged();
-        $gestion = false;
-        if (isset($_SESSION['admin'])) {
-            $gestion = true;
-            $pedidos = $this->pedidoHandler->getAll();
-            if (is_null($pedidos)) {
-                header('Location:' . DOMINIO_URL);
-                exit();
-            }
-        } else {
-            $this->pedidoHandler->setUsuario_id($_SESSION['user_logged']->id);
-            $pedidos = $this->pedidoHandler->getAllByUsuarioId();
-        }
+        $gestion = true;
+        $this->pedidoHandler->setUsuario_id($_SESSION['user_logged']->id);
+        $pedidos = $this->pedidoHandler->getAllByUsuarioId();
+        $cantPedidos = $pedidos->num_rows;
+        require_once 'views/pedido/pedidos.php';
+    }
+
+    public function gestion_pedidos(): void
+    {
+        Utils::isAdmin();
+        $gestion = true;
+        $pedidos = $this->pedidoHandler->getAll();
         $cantPedidos = $pedidos->num_rows;
         require_once 'views/pedido/pedidos.php';
     }

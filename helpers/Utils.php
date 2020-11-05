@@ -1,23 +1,27 @@
 <?php
 
-class Utils {
-    
-    public static function delete_session($name) {
+class Utils
+{
+
+    public static function delete_session($name)
+    {
         if (isset($_SESSION[$name])) {
             unset($_SESSION[$name]);
         }
     }
-    
-    public static function isAdmin() {
-        if (!isset($_SESSION['admin'])) {
+
+    public static function isAdmin()
+    {
+        if (!isset($_SESSION['admin']) || !isset($_SESSION['user_logged'])) {
             header('Location: ' . DOMINIO_URL);
             exit();
         } else {
             return true;
         }
     }
-    
-    public static function isUserLogged() {
+
+    public static function isUserLogged()
+    {
         if (!isset($_SESSION['user_logged'])) {
             header('Location: ' . DOMINIO_URL);
             exit();
@@ -26,23 +30,25 @@ class Utils {
         }
     }
 
-    public static function showCategorias() {
+    public static function showCategorias()
+    {
         require_once './models/handlers/CategoriaHandler.php';
         $category = new CategoriaHandler();
         $categorias = $category->getAll();
         return $categorias;
     }
-    
-    public static function statusCarrito() {
+
+    public static function statusCarrito()
+    {
         self::isUserLogged();
         $status = [
             'cantidad' => 0,
             'unidades' => 0,
             'total' => 0
         ];
-        
+
         $cart = 'carrito-' . $_SESSION['user_logged']->email;
-        
+
         if (isset($_SESSION[$cart])) {
             $status['cantidad'] = count($_SESSION[$cart]);
             $unidades = 0;
@@ -56,5 +62,5 @@ class Utils {
         }
         return $status;
     }
-    
+
 }

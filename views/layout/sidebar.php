@@ -6,10 +6,11 @@
             <h3>Mi carrito</h3>
             <ul>
                 <?php $statusCarrito = Utils::statusCarrito() ?>
+                <li><a href="carrito/index">Ver el carrito</a></li>
                 <li><a href="carrito/index">Productos (<?= $statusCarrito['cantidad'] ?>)</a></li>
                 <li><a href="carrito/index">Unidades (<?= $statusCarrito['unidades'] ?>)</a></li>
                 <li><a href="carrito/index">Total: $ <?= $statusCarrito['total'] ?></a></li>
-                <li><a href="carrito/index">Ver el carrito</a></li>
+                <li><a href="pedido/mis_pedidos">Mis pedidos</a></li>
             </ul>
         </div>
     <?php endif; ?>
@@ -39,13 +40,10 @@
             <?php if (isset($_SESSION['admin'])): ?>
                 <li><a href="categoria/index">Gestionar categorias</a></li>
                 <li><a href="producto/gestion">Gestionar productos</a></li>
-                <li><a href="pedido/pedidos">Gestionar pedidos</a></li>
+                <li><a href="pedido/gestion_pedidos">Gestionar pedidos</a></li>
             <?php endif; ?>
 
             <?php if (isset($_SESSION['user_logged'])): ?>
-                <?php if (!isset($_SESSION['admin'])): ?>
-                    <li><a href="pedido/pedidos">Mis pedidos</a></li>
-                <?php endif; ?>
                 <li><a href="usuario/logout">Cerrar sesión</a></li>
             <?php else: ?>
                 <li><a href="usuario/agregar_view">Registrate aquí</a></li>

@@ -1,5 +1,13 @@
 <h1>Algunos de nuestros productos</h1>
 
+
+<?php if (isset($_SESSION['error-sistem'])): ?>
+    <?php if ($_SESSION['error-sistem'] == 'typeError'): ?>
+        <p class="alert_green">Ocurrió un error en el sistema</p>
+    <?php endif; ?>
+    <?php Utils::delete_session('error-sistem') ?>
+<?php endif; ?>
+
 <?php while ($prod = $productos->fetch_object()): ?>
     <div class="product">
         <a href="<?=DOMINIO_URL?>producto/ver&id=<?=$prod->id?>">

@@ -42,7 +42,7 @@
     </div>
     <div class="total-carrito">
         <h3>Precio total: $ <?= Utils::statusCarrito()['total'] ?></h3>
-        <a href="<?= DOMINIO_URL ?>pedido/hacer" class="button button-pedido">Hacer pedido</a>
+        <a href="<?= DOMINIO_URL ?>pedido/datos_envio" class="button button-pedido">Hacer pedido</a>
     </div>
 <?php else: ?>
     No hay productos en su carrito

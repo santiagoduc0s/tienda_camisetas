@@ -45,6 +45,7 @@ try {
         showError();
     }
 } catch (TypeError $e) {
+    $_SESSION['error-sistem'] = 'typeError'; 
     header('Location: ' . DOMINIO_URL);
     exit();
 }

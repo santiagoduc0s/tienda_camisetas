@@ -67,7 +67,7 @@ class productoController extends Controller
                 $this->productoHandler->setImagen($name_file);
 
                 sin_imagen:
-                if ($this->productoHandler->save()) {
+                if ($this->productoHandler->add()) {
                     if ($hayImagen) {
                         if (!is_dir($ruta_images)) {
                             mkdir($ruta_images, 0777);

@@ -22,7 +22,7 @@ class PedidoHandler extends Handler
 
     // ------------------------------------------------------------------------
 
-    public function save(): bool
+    public function add(): bool
     {
         $resultado = false;
         $sql = "INSERT INTO pedidos VALUES("
@@ -41,9 +41,13 @@ class PedidoHandler extends Handler
             $savePedido = $this->db->query($sql);
             $pedido_id = $this->db->insert_id;
             $saveLinea = true;
-            foreach ($_SESSION['carrito'] as $elemento) {
+            foreach ($_SESSION['carrito-' . $_SESSION['user_logged']->email] as $elemento) {
                 $producto = $elemento['producto'];
-                $sql = "INSERT INTO lineas_pedidos VALUES(NULL, {$pedido_id}, {$elemento['id_producto']}, {$elemento['unidades']});";
+                $sql = "INSERT INTO lineas_pedidos VALUES("
+                        . "NULL, "
+                        . "{$pedido_id}, "
+                        . "{$elemento['id_producto']}, "
+                        . "{$elemento['unidades']});";
                 if (!$this->db->query($sql)) {
                     $saveLinea = false;
                 }
@@ -61,7 +65,7 @@ class PedidoHandler extends Handler
         }
     }
     
-    public function getOneById(): ?stdClass
+    public function getOneById(): ?object
     {
         $result = null;
         $sql = "SELECT * FROM pedidos "
@@ -72,7 +76,7 @@ class PedidoHandler extends Handler
         return $result;
     }
 
-    public function getProductsById(): ?Traversable
+    public function getProductsById(): ?object
     {
         $result = null;
         $sql = "SELECT pr.*, lp.unidades FROM productos pr "
