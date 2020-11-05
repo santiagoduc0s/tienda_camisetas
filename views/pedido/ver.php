@@ -2,22 +2,29 @@
 
 <?php if (isset($_SESSION['set_pedido'])): ?>
     <?php if ($_SESSION['set_pedido'] == 'complete'): ?>
-        <p><strong class="alert_green">Se ha modificado el pedido</strong></p>
+        <p class="alert_green">Se ha modificado el pedido</p><br />
     <?php elseif ($_SESSION['set_pedido'] == 'failed'): ?>
-        <p><strong class="alert_red">Ocurió un error, vuelva a intentarlo</strong></p>
+        <p class="alert_red">Ocurió un error, vuelva a intentarlo</p><br />
     <?php endif; ?>
     <?php Utils::delete_session('set_pedido') ?>
 <?php endif; ?>
 
-<h3>Datos del pedido</h3>
 
+
+<?php if ($gestion): ?>
+    <h3>Datos del usuario</h3>
+    Nombre completo: <?= ucfirst($usuario->nombre) ?> <?= ucwords($usuario->apellidos) ?><br/>
+    Email: <?= $usuario->email ?><br/>
+<?php endif; ?>
+
+<h3>Datos del pedido</h3>
 Número de pedido: <?= $pedido->id ?><br/>
 Total a pagar: $ <?= $pedido->coste ?><br/>
 Envio a: <?= ucfirst($pedido->departamento) ?>, <?= ucwords($pedido->ciudad) ?>, <?= ucwords($pedido->direccion) ?><br/>
 Dia y hora: <?= $pedido->fecha ?> <?= $pedido->hora ?><br/>
-Estado: 
+Estado:
 <?php if ($gestion): ?>
-    <form action="<?= DOMINIO_URL ?>pedido/estado" method="POST">
+    <form action="<?= DOMINIO_URL ?>pedido/modificar_estado" method="POST">
         <input type="hidden" name="pedido_id" value="<?= $pedido->id ?>" />
         <select name="estado">
             <?php foreach ($estados as $est): ?>
@@ -34,7 +41,8 @@ Estado:
     <?= ucfirst($pedido->estado) ?><br/>
 <?php endif; ?>
 
-Productos:
+
+<h3>Productos</h3>
 <table>
     <thead>
         <tr>
@@ -61,11 +69,5 @@ Productos:
         <?php endwhile; ?>
     </tbody>
 </table>
-<br/>
-<?php if ($gestion): ?>
-    <a href="pedido/pedidos">Volver a los pedidos</a>
-<?php else: ?>
-    <a href="pedido/pedidos">Volver a mis pedidos</a>
-<?php endif; ?>
 
 

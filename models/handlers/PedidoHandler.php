@@ -64,7 +64,7 @@ class PedidoHandler extends Handler
             return $resultado;
         }
     }
-    
+
     public function getOneById(): ?object
     {
         $result = null;
@@ -112,18 +112,32 @@ class PedidoHandler extends Handler
         }
         return $resultado;
     }
-    
-    public function getAll(): ?Traversable
+
+    public function getAll(): ?object
     {
         $result = null;
         $sql = "SELECT * FROM pedidos";
-        if ($pedidos = $this->db->query($sql))
-        {
+        if ($pedidos = $this->db->query($sql)) {
             $result = $pedidos;
         }
         return $result;
     }
-    
+
+    public function getUserByPedidoId(): ?object
+    {
+        $result = null;
+        $sql = "SELECT u.id, u.nombre, u.apellidos, u.email, u.imagen "
+                . "FROM pedidos p "
+                . "INNER JOIN usuarios u "
+                . "ON p.usuario_id = u.id "
+                . "WHERE p.id = {$this->id} "
+                . "LIMIT 1;";
+        if ($usuario = $this->db->query($sql)) {
+            $result = $usuario->fetch_object();
+        }
+        return $result;
+    }
+
     public function updateEstado(): bool
     {
         $result = false;

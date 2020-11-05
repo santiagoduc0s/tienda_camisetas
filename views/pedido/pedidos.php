@@ -16,7 +16,7 @@
         <tbody>
             <?php while ($pedido = $pedidos->fetch_object()): ?>
                 <tr>
-                    <td><a href="pedido/ver&id=<?= $pedido->id ?>"><?= $pedido->id ?></a></td>
+                    <td><a href="pedido/ver_pedido&id=<?= $pedido->id ?>"><?= $pedido->id ?></a></td>
                     <td>$ <?= $pedido->coste ?></td>
                     <td><?= $pedido->fecha ?></td>
                     <td><?= $pedido->estado ?></td>

@@ -50,7 +50,7 @@ class pedidoController extends Controller
         $direccion = isset($_POST['direccion']) ? mb_strtolower(trim($_POST['direccion']), 'UTF-8') : false;
         $coste = Utils::statusCarrito()['total'];
 
-        if ($departamento && $ciudad && $direccion) {
+        if ($departamento && $ciudad && $direccion && $coste['cantidad'] > 0) {
             $this->pedidoHandler->setUsuario_id($usuario_id);
             $this->pedidoHandler->setDepartamento($departamento);
             $this->pedidoHandler->setCiudad($ciudad);
@@ -87,7 +87,7 @@ class pedidoController extends Controller
         require_once 'views/pedido/pedidos.php';
     }
 
-    public function ver()
+    public function ver_pedido(): void
     {
         Utils::isUserLogged();
         $gestion = false;
@@ -99,6 +99,7 @@ class pedidoController extends Controller
             $this->pedidoHandler->setId($_GET['id']);
             $pedido = $this->pedidoHandler->getOneById();
             $productos = $this->pedidoHandler->getProductsById();
+            $usuario = $this->pedidoHandler->getUserByPedidoId();
             if (is_null($productos) || is_null($pedido)) {
                 goto no_products;
             }
@@ -109,7 +110,7 @@ class pedidoController extends Controller
         }
     }
 
-    public function estado()
+    public function modificar_estado(): void
     {
         Utils::isAdmin();
 
@@ -120,6 +121,7 @@ class pedidoController extends Controller
                     $estadoCorrecto = true;
                 }
             }
+            
             if ($estadoCorrecto) {
                 $this->pedidoHandler->setId($_POST['pedido_id']);
                 $this->pedidoHandler->setEstado($_POST['estado']);
@@ -131,7 +133,7 @@ class pedidoController extends Controller
             } else {
                 goto salir;
             }
-            header('Location:' . DOMINIO_URL . 'pedido/ver&id=' . $_POST['pedido_id']);
+            header('Location:' . DOMINIO_URL . 'pedido/ver_pedido&id=' . $_POST['pedido_id']);
         } else {
             salir:
             header('Location:' . DOMINIO_URL);
