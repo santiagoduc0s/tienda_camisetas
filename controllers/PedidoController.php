@@ -28,19 +28,7 @@ class pedidoController extends Controller
         require_once './views/pedido/datos-envio.php';
     }
 
-    public function confirmado()
-    {
-        Utils::isUserLogged();
-        $this->pedidoHandler->setUsuario_id($_SESSION['user_logged']->id);
-        $pedido = $this->pedidoHandler->getOneByUsuarioId();
-
-        $this->pedidoHandler->setId($pedido->id);
-        $productos = $this->pedidoHandler->getProductsById();
-
-        include_once './views/pedido/confirmado.php';
-    }
-
-    public function add(): void
+    public function agregar_pedido(): void
     {
         Utils::isUserLogged();
 
@@ -65,7 +53,19 @@ class pedidoController extends Controller
         } else {
             $_SESSION['pedido'] = 'error';
         }
-        header('Location:' . DOMINIO_URL . 'pedido/confirmado');
+        header('Location:' . DOMINIO_URL . 'pedido/pedido_confirmado');
+    }
+    
+    public function pedido_confirmado()
+    {
+        Utils::isUserLogged();
+        $this->pedidoHandler->setUsuario_id($_SESSION['user_logged']->id);
+        $pedido = $this->pedidoHandler->getOneByUsuarioId();
+
+        $this->pedidoHandler->setId($pedido->id);
+        $productos = $this->pedidoHandler->getProductsById();
+
+        include_once './views/pedido/confirmado.php';
     }
 
     public function mis_pedidos(): void

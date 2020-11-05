@@ -1,7 +1,7 @@
 <h1>Hacer pedido</h1>
 
 <h3>Dirección del envío</h3>
-<form action="<?= DOMINIO_URL ?>pedido/add" method="POST">
+<form action="<?= DOMINIO_URL ?>pedido/agregar_pedido" method="POST">
     <label for="departamento">Departamanto</label>
     <input type="text" name="departamento" required/>
 
